@@ -47,7 +47,15 @@
 (defcustom ebookify-output-directory
   "/tmp"
   "Directory where output files are created"
-  :type 'string
+  :type 'directory
+  :group 'ebookify)
+
+(defcustom ebookify-output-document-format
+  'mobi
+  "eBook format"
+  :type '(choice (const :tag "epub" epub)
+                 (const :tag "epub3" epub3)
+                 (const :tag "mobi" mobi))
   :group 'ebookify)
 
 (defcustom ebookify-pandoc-executable
@@ -63,18 +71,6 @@
   :group 'ebookify)
 
 (defstruct document title body num)
-
-;; query 	BSON document that represents the query. The query will contain one or more elements,
-;; all of which must match for a document to be included in the result set. Possible elements include
-;; $query, $orderby, $hint, $explain, and $snapshot.
-
-;; (defun ebookify--mongo-build-query (docids)
-;;   (cond
-;;    ((listp docids) (append (list "$or") (mapcar (lambda (d) `(,ebookify-mongo-search-field . ,d)) docids)))
-;;    ((stringp docids) `(,ebookify-mongo-search-field . ,docids))))
-
-(setq debug-on-error t)
-
 
 ;; TODO: support different backends for documents.
 (defun ebookify--fetch-document (doc-nums)
@@ -100,10 +96,10 @@
           doc-nums))
 
 (defun ebookify--docfile (document extension)
-  (concat "/tmp/" (document-num document) extension))
+  (expand-file-name (concat (document-num document) extension) ebookify-output-directory))
 
 (defun ebookify--store-document (document)
-  (write-region (document-body document) nil (ebookify--docfile document ".html") 'append))
+  (write-region (document-body document) nil (ebookify--docfile document ".html") nil nil nil t))
 
 (defun ebookify--read-file-to-string (file-path)
   (with-temp-buffer
@@ -115,6 +111,7 @@
     (shell-command-to-string (format "%s -f %s -t latex -o %s %s" ebookify-pandoc-executable ebookify-document-format
                                      (ebookify--docfile document ".tex") docfile))))
 
+;;; FIXME: remove hardcoded paths...
 (defun ebookify--read-template (template-name)
   (let* ((current-script (expand-file-name "~/dev/ebookify/ebookify-mode.el"))
          (template-path (concat (file-name-directory current-script) "/templates/" template-name)))
@@ -137,18 +134,23 @@
     (setq sections (mapconcat (lambda (doc)
                                 (ebookify--expand-section-template doc section-template)) documents ""))
     (write-region
-     (ebookify--expand-main-template title author sections main-template) nil "/tmp/main.tex" nil nil nil t)))
+     (ebookify--expand-main-template title author sections main-template) nil
+     (expand-file-name "main.tex" ebookify-output-directory) nil nil nil t)))
 
-(defun ebookify--run-tex4ebook ()
-  (shell-command-to-string (format "cd %s && tex4ebook main.tex -f %s" ebookify-output-directory "mobi")))
+(defun ebookify--run-tex4ebook (ebook-format)
+  (shell-command-to-string (format "cd %s && tex4ebook main.tex -f %s" ebookify-output-directory ebook-format)))
 
-(defun ebookify-create-ebook (doc-ids)
-  (interactive)
-  (let ((docs (ebookify--fetch-document doc-ids)))
+(defun ebookify-create-ebook (title author doc-ids)
+  "Create an eBook entitled TITLE by AUTHOR with docs DOC-IDS.
+DOC-IDS is a comma-separated list of unique identifiers
+identifying each document to include in the eBook."
+  (interactive "sTitle: \nsAuthor: \nsList of IDs: ")
+  (let* ((ids (mapcar #'s-trim (split-string doc-ids ",")))
+        (docs (ebookify--fetch-document ids)))
     (mapcar #'ebookify--store-document docs)
     (mapcar #'ebookify--convert-to-tex docs)
-    (ebookify--build-source "Title" "Moi" docs)
-    (ebookify--run-tex4ebook)))
+    (ebookify--build-source title author docs)
+    (ebookify--run-tex4ebook ebookify-output-document-format)))
 
 (provide 'ebookify-mode)
 ;;; ebookify-mode.el ends here
