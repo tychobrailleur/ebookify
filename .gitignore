@@ -1,5 +1,9 @@
-# Compiled
+*.log
+*.info
+*.pdf
 *.elc
-
-# Packaging
 .cask
+config.status
+configure
+Makefile
+autom4te.cache
