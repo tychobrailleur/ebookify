@@ -34,25 +34,25 @@
 
 (defcustom ebookify-mongo-collection
   "nouvelles_development.nouvelle"
-  "Name of the MongoDB collection to get documents from"
+  "Name of the MongoDB collection to get documents from."
   :type 'string
   :group 'ebookify)
 
 (defcustom ebookify-mongo-search-field
   "num"
-  "Field used to find document in `ebookify-mongo-collection'"
+  "Field used to find document in `ebookify-mongo-collection'."
   :type 'string
   :group 'ebookify)
 
 (defcustom ebookify-output-directory
   "/tmp"
-  "Directory where output files are created"
+  "Directory where output files are created."
   :type 'directory
   :group 'ebookify)
 
 (defcustom ebookify-output-document-format
   'mobi
-  "eBook format"
+  "eBook format."
   :type '(choice (const :tag "epub" epub)
                  (const :tag "epub3" epub3)
                  (const :tag "mobi" mobi))
@@ -60,19 +60,27 @@
 
 (defcustom ebookify-pandoc-executable
   "/usr/bin/pandoc"
-  "Path to Pandoc executable"
+  "Path to Pandoc executable."
   :type '(file :must-match t)
   :group 'ebookify)
 
 (defcustom ebookify-document-format
   "html"
-  "Original format of the document"
+  "Original format of the document."
   :type 'string
   :group 'ebookify)
 
 (defstruct document title body num)
 
+(defvar ebookify--template-directory nil)
+(setq ebookify--template-directory
+      (when load-file-name
+        (expand-file-name "templates" (file-name-directory load-file-name))))
+
+(message "template dir = %s" ebookify--template-directory)
+
 ;; TODO: support different backends for documents.
+;; FIXME: The expected fields are expected to be stored in `title', `body', `num'
 (defun ebookify--fetch-document (doc-nums)
   "Retrieve documents that will be part of the ebook."
   (mapcar (lambda (d)
@@ -111,10 +119,8 @@
     (shell-command-to-string (format "%s -f %s -t latex -o %s %s" ebookify-pandoc-executable ebookify-document-format
                                      (ebookify--docfile document ".tex") docfile))))
 
-;;; FIXME: remove hardcoded paths...
 (defun ebookify--read-template (template-name)
-  (let* ((current-script (expand-file-name "~/dev/ebookify/ebookify-mode.el"))
-         (template-path (concat (file-name-directory current-script) "/templates/" template-name)))
+  (let ((template-path (expand-file-name template-name ebookify--template-directory)))
     (ebookify--read-file-to-string template-path)))
 
 (defun ebookify--expand-section-template (document template)
@@ -147,8 +153,8 @@ identifying each document to include in the eBook."
   (interactive "sTitle: \nsAuthor: \nsList of IDs: ")
   (let* ((ids (mapcar #'s-trim (split-string doc-ids ",")))
         (docs (ebookify--fetch-document ids)))
-    (mapcar #'ebookify--store-document docs)
-    (mapcar #'ebookify--convert-to-tex docs)
+    (mapc #'ebookify--store-document docs)
+    (mapc #'ebookify--convert-to-tex docs)
     (ebookify--build-source title author docs)
     (ebookify--run-tex4ebook ebookify-output-document-format)))
 

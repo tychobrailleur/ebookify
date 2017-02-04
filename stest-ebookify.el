@@ -33,4 +33,8 @@
         (doc (make-document :num "00001")))
     (should (equal (ebookify--docfile doc ".tex") "/tmp/00001.tex"))))
 
+(ert-deftest ebookify--read-file-to-string/read-file ()
+  (let ((str (ebookify--read-file-to-string "LICENSE")))
+    (should (numberp (string-match " +GNU GENERAL PUBLIC LICENSE" str)))))
+
 ;;; stest-ebookify.el ends here
