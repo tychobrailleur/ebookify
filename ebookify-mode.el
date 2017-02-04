@@ -77,8 +77,6 @@
       (when load-file-name
         (expand-file-name "templates" (file-name-directory load-file-name))))
 
-(message "template dir = %s" ebookify--template-directory)
-
 ;; TODO: support different backends for documents.
 ;; FIXME: The expected fields are expected to be stored in `title', `body', `num'
 (defun ebookify--fetch-document (doc-nums)
@@ -152,7 +150,7 @@ DOC-IDS is a comma-separated list of unique identifiers
 identifying each document to include in the eBook."
   (interactive "sTitle: \nsAuthor: \nsList of IDs: ")
   (let* ((ids (mapcar #'s-trim (split-string doc-ids ",")))
-        (docs (ebookify--fetch-document ids)))
+         (docs (ebookify--fetch-document ids)))
     (mapc #'ebookify--store-document docs)
     (mapc #'ebookify--convert-to-tex docs)
     (ebookify--build-source title author docs)

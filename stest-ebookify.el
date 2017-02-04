@@ -19,13 +19,6 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Code:
-
-
-
-(provide 'stest-ebookify)
-;;; stest-ebookify.el ends here
-
-
 (require 'ert)
 
 (ert-deftest ebookify--docfile/create-absolute-path ()
@@ -37,4 +30,6 @@
   (let ((str (ebookify--read-file-to-string "LICENSE")))
     (should (numberp (string-match " +GNU GENERAL PUBLIC LICENSE" str)))))
 
+
+(provide 'stest-ebookify)
 ;;; stest-ebookify.el ends here
