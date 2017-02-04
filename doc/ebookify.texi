@@ -43,7 +43,8 @@ Documentation License.''
 
 @menu
 
-* Introduction:: Presenting @t{ebookify
+* Introduction:: Presenting @t{ebookify}
+* Getting Started:: Configure @t{tebookify}
 
 @node Introduction
 @chapter Introduction
@@ -55,5 +56,15 @@ eBook itself.
 
 Documents can be retrieved from different backends -- currently, it only
 supports MongoDB.
+
+
+@node Getting Started
+@chapter Getting started
+
+@node Backend Configuration
+@section Backend Configuration
+
+The backend provides the documents that are to be included in the
+eBook.
 
 @bye
