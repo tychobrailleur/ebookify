@@ -25,25 +25,13 @@
 ;; Create an eBook from a collection of documents in a known format.
 
 ;;; Code:
-
-(require 'mongo)
 (require 's)
+(require 'ebookify-doc)
+(require 'ebookify-mongo)
 
 (defgroup ebookify nil
   "ebookify parameters"
   :group 'applications)
-
-(defcustom ebookify-mongo-collection
-  "nouvelles_development.nouvelle"
-  "Name of the MongoDB collection to get documents from."
-  :type 'string
-  :group 'ebookify)
-
-(defcustom ebookify-mongo-search-field
-  "num"
-  "Field used to find document in `ebookify-mongo-collection'."
-  :type 'string
-  :group 'ebookify)
 
 (defcustom ebookify-output-directory
   "/tmp"
@@ -71,36 +59,10 @@
   :type 'string
   :group 'ebookify)
 
-(defstruct document title body num)
-
 (defvar ebookify--template-directory nil)
 (setq ebookify--template-directory
       (when load-file-name
         (expand-file-name "templates" (file-name-directory load-file-name))))
-
-;; TODO: support different backends for documents.
-;; FIXME: The expected fields are expected to be stored in `title', `body', `num'
-(defun ebookify--fetch-document (doc-nums)
-  "Retrieve documents that will be part of the ebook."
-  (mapcar (lambda (d)
-            (let* ((query `((,ebookify-mongo-search-field . ,d)))
-                   (result
-                    (mongo-with-open-database
-                        (db :host 'local)
-                      (mongo-do-request
-                       (make-mongo-message-query
-                        :flags 0
-                        :number-to-skip 0
-                        :number-to-return 0
-                        :full-collection-name ebookify-mongo-collection
-                        :query query)
-                       :database db)))
-                   (docres (mongo-message-reply-documents result))
-                   (doc (car docres)))
-              (make-document :title (cdr (assoc-string "title" doc))
-                             :body (cdr (assoc-string "body" doc))
-                             :num (cdr (assoc-string "num" doc)))))
-          doc-nums))
 
 (defun ebookify--docfile (document extension)
   (expand-file-name (concat (document-num document) extension) ebookify-output-directory))
@@ -151,7 +113,7 @@ DOC-IDS is a comma-separated list of unique identifiers
 identifying each document to include in the eBook."
   (interactive "sTitle: \nsAuthor: \nsList of IDs: ")
   (let* ((ids (mapcar #'s-trim (split-string doc-ids ",")))
-         (docs (ebookify--fetch-document ids)))
+         (docs (ebookify-mongo--fetch-document ids)))
     (mapc #'ebookify--store-document docs)
     (mapc #'ebookify--convert-to-tex docs)
     (ebookify--build-source title author docs)

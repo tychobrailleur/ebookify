@@ -1,4 +1,4 @@
-;;; stest-ebookify.el --- Tests for ebookify         -*- lexical-binding: t; -*-
+;;; ebookify-doc.el --- ebookify document            -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017  Sébastien Le Callonnec
 
@@ -18,19 +18,13 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
+;;
+
 ;;; Code:
-(require 'ert)
-(require 'ebookify-doc)
+(eval-when-compile (require 'cl-lib))
+(cl-defstruct document title body num)
 
-(ert-deftest ebookify--docfile/create-absolute-path ()
-  (let ((ebookify-output-directory "/tmp")
-        (doc (make-document :num "00001")))
-    (should (equal (ebookify--docfile doc ".tex") "/tmp/00001.tex"))))
-
-(ert-deftest ebookify--read-file-to-string/read-file ()
-  (let ((str (ebookify--read-file-to-string "LICENSE")))
-    (should (numberp (string-match " +GNU GENERAL PUBLIC LICENSE" str)))))
-
-
-(provide 'stest-ebookify)
-;;; stest-ebookify.el ends here
+(provide 'ebookify-doc)
+;;; ebookify-doc.el ends here
