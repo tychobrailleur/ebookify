@@ -33,6 +33,12 @@
   "ebookify parameters"
   :group 'applications)
 
+(defcustom ebookify-document-backend
+  "mongo"
+  "Backend storing the documents to be added to the ebook."
+  :type 'string
+  :group 'ebookify)
+
 (defcustom ebookify-output-directory
   "/tmp"
   "Directory where output files are created."
@@ -107,13 +113,17 @@
 (defun ebookify--run-tex4ebook (ebook-format)
   (shell-command-to-string (format "cd %s && tex4ebook main.tex -f %s" ebookify-output-directory ebook-format)))
 
+(defun ebookify--get-documents-from-backend (ids)
+;;  (require (intern (concat "ebookify-"  ebookify-document-backend)))
+  (funcall (intern (concat "ebookify-"  ebookify-document-backend "--fetch-document")) ids))
+
 (defun ebookify-create-ebook (title author doc-ids)
   "Create an eBook entitled TITLE by AUTHOR with docs DOC-IDS.
 DOC-IDS is a comma-separated list of unique identifiers
 identifying each document to include in the eBook."
   (interactive "sTitle: \nsAuthor: \nsList of IDs: ")
   (let* ((ids (mapcar #'s-trim (split-string doc-ids ",")))
-         (docs (ebookify-mongo--fetch-document ids)))
+         (docs (ebookify--get-documents-from-backend ids)))
     (mapc #'ebookify--store-document docs)
     (mapc #'ebookify--convert-to-tex docs)
     (ebookify--build-source title author docs)

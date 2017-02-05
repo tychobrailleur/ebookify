@@ -27,20 +27,36 @@
 (require 'ebookify-doc)
 (require 'mongo)
 
+(defgroup ebookify-mongo nil
+  "ebookify mongodb parameters"
+  :group 'ebookify)
+
 (defcustom ebookify-mongo-collection
   "nouvelles_development.nouvelle"
   "Name of the MongoDB collection to get documents from."
   :type 'string
-  :group 'ebookify)
+  :group 'ebookify-mongo)
 
 (defcustom ebookify-mongo-search-field
   "num"
   "Field used to find document in `ebookify-mongo-collection'."
   :type 'string
-  :group 'ebookify)
+  :group 'ebookify-mongo)
 
-;; TODO: support different backends for documents.
-;; FIXME: The expected fields are expected to be stored in `title', `body', `num'
+(defcustom ebookify-mongo-fields
+  '(("id" "num") ("title" "title") ("body" "body"))
+  "Field used for laying out doc from `ebookify-mongo-collection'."
+  :type '(alist
+          :key-type (choice :tag "Field"
+                            (const :tag "id" id)
+                            (const :tag "title" title)
+                            (const :tag "body" body))
+          :value-type string)
+  :group 'ebookify-mongo)
+
+(defun ebookify-mongo--get-property-name (property)
+  (cadr (assoc-string property ebookify-mongo-fields)))
+
 (defun ebookify-mongo--fetch-document (doc-nums)
   "Retrieve documents that will be part of the ebook."
   (mapcar (lambda (d)
@@ -58,9 +74,9 @@
                        :database db)))
                    (docres (mongo-message-reply-documents result))
                    (doc (car docres)))
-              (make-document :title (cdr (assoc-string "title" doc))
-                             :body (cdr (assoc-string "body" doc))
-                             :num (cdr (assoc-string "num" doc)))))
+              (make-document :title (cdr (assoc-string (ebookify-mongo--get-property-name "title") doc))
+                             :body (cdr (assoc-string (ebookify-mongo--get-property-name "body") doc))
+                             :num (cdr (assoc-string (ebookify-mongo--get-property-name "id") doc)))))
           doc-nums))
 
 
