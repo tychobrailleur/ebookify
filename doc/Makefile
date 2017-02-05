@@ -1,11 +1,11 @@
-all: ebookify.info ebookify.pdf
+all: ebooklify.info ebooklify.pdf
 
 
 # makeinfo using the first pre-requisite
-ebookify.info: ebookify.texi
+ebooklify.info: ebooklify.texi
 	makeinfo $<
 
-ebookify.pdf: ebookify.texi
+ebooklify.pdf: ebooklify.texi
 	texi2pdf $<
 
 clean:

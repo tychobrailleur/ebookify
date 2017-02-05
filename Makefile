@@ -8,7 +8,7 @@ doc:
 
 compile:
 	cask exec $(EMACS) -batch --eval="(add-to-list 'load-path \".\")" \
-	--eval "(mapc #'byte-compile-file (list \"ebookify-doc.el\" \"ebookify-mongo.el\" \"ebookify-mode.el\"))"
+	--eval "(mapc #'byte-compile-file (list \"ebooklify-doc.el\" \"ebooklify-mongo.el\" \"ebooklify-mode.el\"))"
 
 clean:
 	rm -rf *.elc

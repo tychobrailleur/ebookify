@@ -1,4 +1,4 @@
-;;; ebookify-doc.el --- ebookify document            -*- lexical-binding: t; -*-
+;;; ebooklify-doc.el --- ebooklify document            -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017  Sébastien Le Callonnec
 
@@ -26,5 +26,5 @@
 (eval-when-compile (require 'cl-lib))
 (cl-defstruct document title body num)
 
-(provide 'ebookify-doc)
-;;; ebookify-doc.el ends here
+(provide 'ebooklify-doc)
+;;; ebooklify-doc.el ends here

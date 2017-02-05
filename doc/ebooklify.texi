@@ -1,7 +1,7 @@
 \input texinfo.tex    @c -*-texinfo-*-
 @documentencoding UTF-8
-@setfilename ebookify.info
-@settitle ebookify user manual
+@setfilename ebooklify.info
+@settitle ebooklify user manual
 
 @copying
 Copyright @copyright{} 2017 Sébastien Le Callonnec
@@ -18,7 +18,7 @@ Documentation License.''
 
 
 @titlepage
-@title ebookify User Manual
+@title ebooklify User Manual
 @author Sébastien Le Callonnec
 
 @page
@@ -29,7 +29,7 @@ Documentation License.''
 
 @dircategory Emacs
 @direntry
-* ebookify: (ebookify).  A Utility to create ebooks from documents.
+* ebooklify: (ebooklify).  A Utility to create ebooks from documents.
 @end direntry
 
 
@@ -37,20 +37,20 @@ Documentation License.''
 
 @ifnottex
 @node Top
-@top ebookify manual
+@top ebooklify manual
 @end ifnottex
 
 
 @menu
-* Introduction:: Presenting @t{ebookify}
-* Getting Started:: Configure @t{tebookify}
+* Introduction:: Presenting @t{ebooklify}
+* Getting Started:: Configure @t{tebooklify}
 
 @end menu
 
 @node Introduction
 @chapter Introduction
 
-@t{ebookify} is an Emacs utility that can transform a collection of
+@t{ebooklify} is an Emacs utility that can transform a collection of
 documents in a given format into an eBook.  It uses @t{pandoc} to first
 convert the documents into @TeX{}, and @t{tex4ebook} to then create the
 eBook itself.
@@ -65,9 +65,9 @@ supports MongoDB.
 @node Backend Configuration
 @section Backend Configuration
 
-@vindex ebookify-document-backend
+@vindex ebooklify-document-backend
 The backend provides the documents that are to be included in the
-eBook.  The backend is defined by the @code{ebookify-document-backend},
+eBook.  The backend is defined by the @code{ebooklify-document-backend},
 and its default value is @t{mongo}.
 
 

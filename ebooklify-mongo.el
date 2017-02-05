@@ -1,4 +1,4 @@
-;;; ebookify-mongo.el --- MongoDB backend for ebookify  -*- lexical-binding: t; -*-
+;;; ebooklify-mongo.el --- MongoDB backend for ebooklify  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017  Sébastien Le Callonnec
 
@@ -20,47 +20,47 @@
 
 ;;; Commentary:
 
-;; MongoDB backend for ebookify.
+;; MongoDB backend for ebooklify.
 
 ;;; Code:
 
-(require 'ebookify-doc)
+(require 'ebooklify-doc)
 (require 'mongo)
 
-(defgroup ebookify-mongo nil
-  "ebookify mongodb parameters"
-  :group 'ebookify)
+(defgroup ebooklify-mongo nil
+  "ebooklify mongodb parameters"
+  :group 'ebooklify)
 
-(defcustom ebookify-mongo-collection
+(defcustom ebooklify-mongo-collection
   "nouvelles_development.nouvelle"
   "Name of the MongoDB collection to get documents from."
   :type 'string
-  :group 'ebookify-mongo)
+  :group 'ebooklify-mongo)
 
-(defcustom ebookify-mongo-search-field
+(defcustom ebooklify-mongo-search-field
   "num"
-  "Field used to find document in `ebookify-mongo-collection'."
+  "Field used to find document in `ebooklify-mongo-collection'."
   :type 'string
-  :group 'ebookify-mongo)
+  :group 'ebooklify-mongo)
 
-(defcustom ebookify-mongo-fields
+(defcustom ebooklify-mongo-fields
   '(("id" "num") ("title" "title") ("body" "body"))
-  "Field used for laying out doc from `ebookify-mongo-collection'."
+  "Field used for laying out doc from `ebooklify-mongo-collection'."
   :type '(alist
           :key-type (choice :tag "Field"
                             (const :tag "id" id)
                             (const :tag "title" title)
                             (const :tag "body" body))
           :value-type string)
-  :group 'ebookify-mongo)
+  :group 'ebooklify-mongo)
 
-(defun ebookify-mongo--get-property-name (property)
-  (cadr (assoc-string property ebookify-mongo-fields)))
+(defun ebooklify-mongo--get-property-name (property)
+  (cadr (assoc-string property ebooklify-mongo-fields)))
 
-(defun ebookify-mongo--fetch-document (doc-nums)
+(defun ebooklify-mongo--fetch-document (doc-nums)
   "Retrieve documents that will be part of the ebook."
   (mapcar (lambda (d)
-            (let* ((query `((,ebookify-mongo-search-field . ,d)))
+            (let* ((query `((,ebooklify-mongo-search-field . ,d)))
                    (result
                     (mongo-with-open-database
                         (db :host 'local)
@@ -69,16 +69,16 @@
                         :flags 0
                         :number-to-skip 0
                         :number-to-return 0
-                        :full-collection-name ebookify-mongo-collection
+                        :full-collection-name ebooklify-mongo-collection
                         :query query)
                        :database db)))
                    (docres (mongo-message-reply-documents result))
                    (doc (car docres)))
-              (make-document :title (cdr (assoc-string (ebookify-mongo--get-property-name "title") doc))
-                             :body (cdr (assoc-string (ebookify-mongo--get-property-name "body") doc))
-                             :num (cdr (assoc-string (ebookify-mongo--get-property-name "id") doc)))))
+              (make-document :title (cdr (assoc-string (ebooklify-mongo--get-property-name "title") doc))
+                             :body (cdr (assoc-string (ebooklify-mongo--get-property-name "body") doc))
+                             :num (cdr (assoc-string (ebooklify-mongo--get-property-name "id") doc)))))
           doc-nums))
 
 
-(provide 'ebookify-mongo)
-;;; ebookify-mongo.el ends here
+(provide 'ebooklify-mongo)
+;;; ebooklify-mongo.el ends here

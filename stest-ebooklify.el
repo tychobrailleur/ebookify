@@ -1,4 +1,4 @@
-;;; stest-ebookify.el --- Tests for ebookify         -*- lexical-binding: t; -*-
+;;; stest-ebooklify.el --- Tests for ebooklify         -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017  Sébastien Le Callonnec
 
@@ -20,17 +20,17 @@
 
 ;;; Code:
 (require 'ert)
-(require 'ebookify-doc)
+(require 'ebooklify-doc)
 
-(ert-deftest ebookify--docfile/create-absolute-path ()
-  (let ((ebookify-output-directory "/tmp")
+(ert-deftest ebooklify--docfile/create-absolute-path ()
+  (let ((ebooklify-output-directory "/tmp")
         (doc (make-document :num "00001")))
-    (should (equal (ebookify--docfile doc ".tex") "/tmp/00001.tex"))))
+    (should (equal (ebooklify--docfile doc ".tex") "/tmp/00001.tex"))))
 
-(ert-deftest ebookify--read-file-to-string/read-file ()
-  (let ((str (ebookify--read-file-to-string "LICENSE")))
+(ert-deftest ebooklify--read-file-to-string/read-file ()
+  (let ((str (ebooklify--read-file-to-string "LICENSE")))
     (should (numberp (string-match " +GNU GENERAL PUBLIC LICENSE" str)))))
 
 
-(provide 'stest-ebookify)
-;;; stest-ebookify.el ends here
+(provide 'stest-ebooklify)
+;;; stest-ebooklify.el ends here
