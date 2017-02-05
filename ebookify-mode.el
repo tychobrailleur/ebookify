@@ -3,6 +3,7 @@
 ;; Copyright (C) 2017  Sébastien Le Callonnec
 
 ;; Author: Sébastien Le Callonnec <sebastien@weblogism.com>
+;; Version: 0.1.0
 ;; Keywords:
 ;; Require-Packages: ((mongo-el "0.0.0") (s "1.11.0")
 

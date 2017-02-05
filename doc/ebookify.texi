@@ -46,6 +46,8 @@ Documentation License.''
 * Introduction:: Presenting @t{ebookify}
 * Getting Started:: Configure @t{tebookify}
 
+@end menu
+
 @node Introduction
 @chapter Introduction
 
