@@ -12,4 +12,4 @@ clean:
 	rm -f *.pdf
 	rm -f *.info
 	rm -f *.aux *.toc *.log
-	rm -f *.cp *.fn *.pg *.ky *.tp *.vr
+	rm -f *.cp *.fn *.pg *.ky *.tp *.vr *.vrs

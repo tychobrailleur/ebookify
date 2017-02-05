@@ -42,7 +42,6 @@ Documentation License.''
 
 
 @menu
-
 * Introduction:: Presenting @t{ebookify}
 * Getting Started:: Configure @t{tebookify}
 
@@ -56,7 +55,7 @@ documents in a given format into an eBook.  It uses @t{pandoc} to first
 convert the documents into @TeX{}, and @t{tex4ebook} to then create the
 eBook itself.
 
-Documents can be retrieved from different backends -- currently, it only
+Documents can be retrieved from different backends – currently, it only
 supports MongoDB.
 
 
@@ -66,7 +65,11 @@ supports MongoDB.
 @node Backend Configuration
 @section Backend Configuration
 
+@vindex ebookify-document-backend
 The backend provides the documents that are to be included in the
-eBook.
+eBook.  The backend is defined by the @code{ebookify-document-backend},
+and its default value is @t{mongo}.
+
+
 
 @bye
