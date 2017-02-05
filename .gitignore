@@ -5,5 +5,12 @@
 .cask
 config.status
 configure
-Makefile
 autom4te.cache
+doc/*.aux
+doc/*.toc
+doc/*.cp
+doc/*.fn
+doc/*.ky
+doc/*.pg
+doc/*.tp
+doc/*.vr
