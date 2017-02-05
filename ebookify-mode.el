@@ -82,9 +82,12 @@
     (buffer-string)))
 
 (defun ebookify--convert-to-tex (document)
+  "Convert the document format to TeX."
   (let ((docfile (ebookify--docfile document ".html")))
-    (shell-command-to-string (format "%s -f %s -t latex -o %s %s" ebookify-pandoc-executable ebookify-document-format
-                                     (ebookify--docfile document ".tex") docfile))))
+    (shell-command-to-string
+     (format "%s -f %s -t latex -o %s %s"
+             ebookify-pandoc-executable ebookify-document-format
+             (ebookify--docfile document ".tex") docfile))))
 
 (defun ebookify--read-template (template-name)
   (let ((template-path (expand-file-name template-name ebookify--template-directory)))
@@ -104,8 +107,9 @@
   (let ((main-template (ebookify--read-template "main.txt"))
         (section-template (ebookify--read-template "section.txt"))
         (sections nil))
-    (setq sections (mapconcat (lambda (doc)
-                                (ebookify--expand-section-template doc section-template)) documents ""))
+    (setq sections (mapconcat
+                    (lambda (doc)
+                      (ebookify--expand-section-template doc section-template)) documents ""))
     (write-region
      (ebookify--expand-main-template title author sections main-template) nil
      (expand-file-name "main.tex" ebookify-output-directory) nil nil nil t)))
@@ -114,11 +118,12 @@
   (shell-command-to-string (format "cd %s && tex4ebook main.tex -f %s" ebookify-output-directory ebook-format)))
 
 (defun ebookify--get-documents-from-backend (ids)
-;;  (require (intern (concat "ebookify-"  ebookify-document-backend)))
-  (funcall (intern (concat "ebookify-"  ebookify-document-backend "--fetch-document")) ids))
+  ;;  (require (intern (concat "ebookify-"  ebookify-document-backend)))
+  (funcall (intern (format "ebookify-%s--fetch-document" ebookify-document-backend)) ids))
 
 (defun ebookify-create-ebook (title author doc-ids)
   "Create an eBook entitled TITLE by AUTHOR with docs DOC-IDS.
+
 DOC-IDS is a comma-separated list of unique identifiers
 identifying each document to include in the eBook."
   (interactive "sTitle: \nsAuthor: \nsList of IDs: ")
