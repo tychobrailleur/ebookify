@@ -30,6 +30,10 @@
 
 \usepackage{tex4ebook}
 
+%% Pandoc uses \tightlist when converting document.
+%% Cf. https://tex.stackexchange.com/questions/257418/error-tightlist-converting-md-file-into-pdf-using-pandoc
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 \begin{document}
 \maketitle

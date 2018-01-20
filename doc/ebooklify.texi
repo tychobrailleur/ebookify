@@ -4,7 +4,7 @@
 @settitle ebooklify user manual
 
 @copying
-Copyright @copyright{} 2017 Sébastien Le Callonnec
+Copyright @copyright{} 2017,2018 Sébastien Le Callonnec
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -43,7 +43,7 @@ Documentation License.''
 
 @menu
 * Introduction:: Presenting @t{ebooklify}
-* Getting Started:: Configure @t{tebooklify}
+* Getting Started:: Configure @t{ebooklify}
 
 @end menu
 
